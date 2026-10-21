@@ -45,16 +45,6 @@ export class InitialDatabaseSchema1792592259303 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "users" ADD "password" character varying NOT NULL`);
         await queryRunner.query(`ALTER TABLE "users" ADD "account_type" "public"."account_type_enum" NOT NULL`);
         await queryRunner.query(`ALTER TABLE "users" ADD "last_login_at" TIMESTAMP WITH TIME ZONE`);
-        await queryRunner.query(`ALTER TABLE "users" ADD "user_id" uuid NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "UQ_96aac72f1574b88752e9fb00089" UNIQUE ("user_id")`);
-        await queryRunner.query(`ALTER TABLE "users" ADD "hotel_id" uuid NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "users" ADD "role_id" uuid NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "users" ADD "invited_by_user_id" uuid`);
-        await queryRunner.query(`ALTER TABLE "users" ADD "invited_at" TIMESTAMP WITH TIME ZONE`);
-        await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "FK_96aac72f1574b88752e9fb00089" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "FK_5d850bfb38a7766b0a39adcd355" FOREIGN KEY ("hotel_id") REFERENCES "hotels"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "FK_a2cecd1a3531c0b041e29ba46e1" FOREIGN KEY ("role_id") REFERENCES "roles"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "FK_f18afc9d813b651ab321b83dafa" FOREIGN KEY ("invited_by_user_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "guests" ADD CONSTRAINT "FK_7530415f4d7c969101ec8424df2" FOREIGN KEY ("hotel_id") REFERENCES "hotels"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "room_types" ADD CONSTRAINT "FK_d5b28cff7295a9de224a3bd9911" FOREIGN KEY ("hotel_id") REFERENCES "hotels"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "rooms" ADD CONSTRAINT "FK_7a61484af364d0d804b21b25c7f" FOREIGN KEY ("hotel_id") REFERENCES "hotels"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
