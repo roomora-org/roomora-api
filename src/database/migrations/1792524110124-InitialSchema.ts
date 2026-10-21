@@ -1,0 +1,112 @@
+import { MigrationInterface, QueryRunner } from "typeorm";
+
+export class InitialSchema1792524110124 implements MigrationInterface {
+    name = 'InitialSchema1792524110124'
+
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`CREATE TABLE "roles" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "created_by" uuid, "updated_by" uuid, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying NOT NULL, "description" text, CONSTRAINT "UQ_648e3f5447f725579d7d4ffdfb7" UNIQUE ("name"), CONSTRAINT "PK_c1433d71a4838793a49dcad46ab" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "users" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "created_by" uuid, "updated_by" uuid, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "hotel_id" uuid NOT NULL, "role_id" uuid NOT NULL, "first_name" character varying NOT NULL, "last_name" character varying NOT NULL, "email" character varying NOT NULL, "phone" character varying, "password" character varying NOT NULL, "invited_by_user_id" uuid, "invited_at" TIMESTAMP WITH TIME ZONE, "last_login_at" TIMESTAMP WITH TIME ZONE, CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE ("email"), CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TYPE "public"."hotel_status_enum" AS ENUM('PENDING', 'ACTIVE', 'SUSPENDED', 'INACTIVE')`);
+        await queryRunner.query(`CREATE TABLE "hotels" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "created_by" uuid, "updated_by" uuid, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying NOT NULL, "slug" character varying NOT NULL, "description" text, "email" character varying NOT NULL, "phone" character varying NOT NULL, "alternative_phone" character varying, "country" character varying NOT NULL, "city" character varying NOT NULL, "address" character varying NOT NULL, "postal_code" character varying, "logo_url" text NOT NULL, "star_rating" integer, "time_zone" character varying NOT NULL DEFAULT 'UTC', "check_in_time" TIME NOT NULL DEFAULT '14:00', "check_out_time" TIME NOT NULL DEFAULT '12:00', "hotel_status" "public"."hotel_status_enum" NOT NULL DEFAULT 'PENDING', CONSTRAINT "UQ_4b1e0a5251af116f478314ce1c9" UNIQUE ("slug"), CONSTRAINT "UQ_bf2e1d96bdc6d87b1713070de24" UNIQUE ("email"), CONSTRAINT "PK_2bb06797684115a1ba7c705fc7b" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "guests" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "created_by" uuid, "updated_by" uuid, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "hotel_id" uuid NOT NULL, "first_name" character varying NOT NULL, "last_name" character varying NOT NULL, "email" character varying, "phone" character varying NOT NULL, "date_of_birth" date, "nationality" character varying, "country_of_residence" character varying, "city" character varying, "address" text, "passport_number" character varying, CONSTRAINT "UQ_ad0d24a41c323b2277239898efb" UNIQUE ("passport_number"), CONSTRAINT "PK_4948267e93869ddcc6b340a2c46" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TYPE "public"."room_type_enum" AS ENUM('SINGLE', 'DOUBLE', 'SUITE', 'FAMILY')`);
+        await queryRunner.query(`CREATE TABLE "room_types" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "created_by" uuid, "updated_by" uuid, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "hotel_id" uuid NOT NULL, "room_type" "public"."room_type_enum" NOT NULL DEFAULT 'SINGLE', "name" character varying NOT NULL, "description" text, "capacity" integer NOT NULL, "price_per_night" numeric(10,2) NOT NULL, CONSTRAINT "PK_b6e1d0a9b67d4b9fbff9c35ab69" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TYPE "public"."occupancy_status_enum" AS ENUM('VACANT', 'OCCUPIED', 'OUT_OF_SERVICE')`);
+        await queryRunner.query(`CREATE TYPE "public"."cleaning_status_enum" AS ENUM('CLEAN', 'DIRTY', 'CLEANING_IN_PROGRESS')`);
+        await queryRunner.query(`CREATE TYPE "public"."maintenance_status_enum" AS ENUM('NORMAL', 'NEEDS_MAINTENANCE', 'UNDER_MAINTENANCE', 'OUT_OF_SERVICE')`);
+        await queryRunner.query(`CREATE TABLE "rooms" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "created_by" uuid, "updated_by" uuid, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "hotel_id" uuid NOT NULL, "room_type_id" uuid NOT NULL, "room_number" character varying NOT NULL, "floor_number" integer NOT NULL, "occupancy_status" "public"."occupancy_status_enum" NOT NULL DEFAULT 'VACANT', "cleaning_status" "public"."cleaning_status_enum" NOT NULL DEFAULT 'DIRTY', "maintenance_status" "public"."maintenance_status_enum" NOT NULL DEFAULT 'NORMAL', "notes" text, CONSTRAINT "PK_0368a2d7c215f2d0458a54933f2" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TYPE "public"."reservation_status_enum" AS ENUM('PENDING', 'CONFIRMED', 'CANCELLED', 'CHECKED_IN', 'CHECKED_OUT', 'NO_SHOW')`);
+        await queryRunner.query(`CREATE TABLE "reservations" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "created_by" uuid, "updated_by" uuid, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "hotel_id" uuid NOT NULL, "guest_id" uuid NOT NULL, "room_id" uuid NOT NULL, "check_in_date" date NOT NULL, "check_out_date" date NOT NULL, "adults_count" integer NOT NULL DEFAULT '1', "children_count" integer NOT NULL DEFAULT '0', "reservation_status" "public"."reservation_status_enum" NOT NULL DEFAULT 'PENDING', "special_requests" text, "total_room_price" numeric(10,2) NOT NULL, "cancellation_reason" text, "cancelled_at" TIMESTAMP WITH TIME ZONE, "confirmed_at" TIMESTAMP WITH TIME ZONE, CONSTRAINT "PK_da95cef71b617ac35dc5bcda243" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TYPE "public"."invoice_status_enum" AS ENUM('DRAFT', 'ISSUED', 'PAID', 'VOID')`);
+        await queryRunner.query(`CREATE TABLE "invoices" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "created_by" uuid, "updated_by" uuid, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "hotel_id" uuid NOT NULL, "folio_id" uuid NOT NULL, "guest_id" uuid NOT NULL, "invoice_number" character varying NOT NULL, "invoice_status" "public"."invoice_status_enum" NOT NULL DEFAULT 'DRAFT', "total_amount" numeric(10,2) NOT NULL, "issued_at" TIMESTAMP WITH TIME ZONE, "paid_at" TIMESTAMP WITH TIME ZONE, "paid_by_user_id" uuid, "notes" text, "cancelled_at" TIMESTAMP WITH TIME ZONE, "cancellation_reason" text, CONSTRAINT "UQ_5ba20b78d8a33cba794810e8f27" UNIQUE ("folio_id"), CONSTRAINT "UQ_d8f8d3788694e1b3f96c42c36fb" UNIQUE ("invoice_number"), CONSTRAINT "PK_668cef7c22a427fd822cc1be3ce" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TYPE "public"."folio_status_enum" AS ENUM('OPEN', 'CLOSED')`);
+        await queryRunner.query(`CREATE TABLE "folios" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "created_by" uuid, "updated_by" uuid, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "hotel_id" uuid NOT NULL, "reservation_id" uuid NOT NULL, "folio_status" "public"."folio_status_enum" NOT NULL DEFAULT 'OPEN', "opened_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "closed_at" TIMESTAMP WITH TIME ZONE, "created_by_user_id" uuid NOT NULL, "closed_by_user_id" uuid, "notes" text, CONSTRAINT "UQ_ebb264728f2999a0945cd7891ee" UNIQUE ("reservation_id"), CONSTRAINT "PK_7f24eeb34136609bf53df6cf2f7" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "services" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "created_by" uuid, "updated_by" uuid, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "hotel_id" uuid NOT NULL, "name" character varying NOT NULL, "description" text, "default_price" numeric(10,2) NOT NULL, CONSTRAINT "PK_ba2d347a3168a296416c6c5ccb2" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "folio_items" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "created_by" uuid, "updated_by" uuid, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "hotel_id" uuid NOT NULL, "folio_id" uuid NOT NULL, "service_id" uuid, "service_name" character varying NOT NULL, "description" text, "quantity" numeric(10,2) NOT NULL DEFAULT '1', "unit_price" numeric(10,2) NOT NULL, "total_price" numeric(10,2) NOT NULL, "notes" text, "voided_at" TIMESTAMP WITH TIME ZONE, "voided_by_user_id" uuid, "void_reason" text, CONSTRAINT "PK_665ee461fdc8fe192301329f092" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TYPE "public"."task_type_enum" AS ENUM('CLEANING', 'ROOM_INSPECTION', 'MAINTENANCE', 'REPAIR', 'LINEN_CHANGE', 'RESTOCK_SUPPLIES', 'GUEST_REQUEST', 'PUBLIC_AREA_CLEANING', 'GENERAL')`);
+        await queryRunner.query(`CREATE TYPE "public"."task_priority_enum" AS ENUM('LOW', 'MEDIUM', 'HIGH', 'URGENT')`);
+        await queryRunner.query(`CREATE TYPE "public"."task_status_enum" AS ENUM('PENDING', 'ASSIGNED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED')`);
+        await queryRunner.query(`CREATE TYPE "public"."task_source_enum" AS ENUM('MANUAL', 'CHECKOUT', 'GUEST_REQUEST', 'MAINTENANCE_REPORT')`);
+        await queryRunner.query(`CREATE TABLE "tasks" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "created_by" uuid, "updated_by" uuid, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "hotel_id" uuid NOT NULL, "room_id" uuid NOT NULL, "assigned_to_user_id" uuid NOT NULL, "taskType" "public"."task_type_enum" NOT NULL, "title" character varying NOT NULL, "description" text, "task_priority" "public"."task_priority_enum" NOT NULL DEFAULT 'MEDIUM', "task_status" "public"."task_status_enum" NOT NULL DEFAULT 'PENDING', "task_source" "public"."task_source_enum" NOT NULL, "due_at" TIMESTAMP WITH TIME ZONE NOT NULL, "started_at" TIMESTAMP WITH TIME ZONE, "completed_at" TIMESTAMP WITH TIME ZONE, "completion_notes" text, CONSTRAINT "PK_8d12ff38fcc62aaba2cab748772" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "FK_5d850bfb38a7766b0a39adcd355" FOREIGN KEY ("hotel_id") REFERENCES "hotels"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "FK_a2cecd1a3531c0b041e29ba46e1" FOREIGN KEY ("role_id") REFERENCES "roles"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "FK_f18afc9d813b651ab321b83dafa" FOREIGN KEY ("invited_by_user_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "guests" ADD CONSTRAINT "FK_7530415f4d7c969101ec8424df2" FOREIGN KEY ("hotel_id") REFERENCES "hotels"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "room_types" ADD CONSTRAINT "FK_d5b28cff7295a9de224a3bd9911" FOREIGN KEY ("hotel_id") REFERENCES "hotels"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "rooms" ADD CONSTRAINT "FK_7a61484af364d0d804b21b25c7f" FOREIGN KEY ("hotel_id") REFERENCES "hotels"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "rooms" ADD CONSTRAINT "FK_8a380bdc519b8701daf0ec62da0" FOREIGN KEY ("room_type_id") REFERENCES "room_types"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "reservations" ADD CONSTRAINT "FK_004cd8da8192b7f0df6b927d9d2" FOREIGN KEY ("hotel_id") REFERENCES "hotels"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "reservations" ADD CONSTRAINT "FK_dc005326311e08f043613095b3e" FOREIGN KEY ("guest_id") REFERENCES "guests"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "reservations" ADD CONSTRAINT "FK_6aef3a04f7c96611e75d2db10fb" FOREIGN KEY ("room_id") REFERENCES "rooms"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "invoices" ADD CONSTRAINT "FK_0bdc0816e8df4e69dd3a2994916" FOREIGN KEY ("hotel_id") REFERENCES "hotels"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "invoices" ADD CONSTRAINT "FK_5ba20b78d8a33cba794810e8f27" FOREIGN KEY ("folio_id") REFERENCES "folios"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "invoices" ADD CONSTRAINT "FK_1916919510894fecce51c74ede1" FOREIGN KEY ("guest_id") REFERENCES "guests"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "invoices" ADD CONSTRAINT "FK_9df36d0f0732ba17083a802a94f" FOREIGN KEY ("paid_by_user_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "folios" ADD CONSTRAINT "FK_51ceeb922b81e5a269511d50cb3" FOREIGN KEY ("hotel_id") REFERENCES "hotels"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "folios" ADD CONSTRAINT "FK_ebb264728f2999a0945cd7891ee" FOREIGN KEY ("reservation_id") REFERENCES "reservations"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "folios" ADD CONSTRAINT "FK_627cf68fb867e55fa7e0f528735" FOREIGN KEY ("created_by_user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "folios" ADD CONSTRAINT "FK_a3ee78087a6754cb7d0b22af883" FOREIGN KEY ("closed_by_user_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "services" ADD CONSTRAINT "FK_c466faaf88d8335ed1acffb21eb" FOREIGN KEY ("hotel_id") REFERENCES "hotels"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "folio_items" ADD CONSTRAINT "FK_4e823db6536a555f58180350ef6" FOREIGN KEY ("hotel_id") REFERENCES "hotels"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "folio_items" ADD CONSTRAINT "FK_2eec5ee20e7277ae54568a5c784" FOREIGN KEY ("folio_id") REFERENCES "folios"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "folio_items" ADD CONSTRAINT "FK_ef34cba1ad63d275b23aa3bff0f" FOREIGN KEY ("service_id") REFERENCES "services"("id") ON DELETE SET NULL ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "folio_items" ADD CONSTRAINT "FK_0d001c7844fe97e2dc5e2f3b264" FOREIGN KEY ("voided_by_user_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "tasks" ADD CONSTRAINT "FK_570bdf2bb66fc333f0457a325c3" FOREIGN KEY ("hotel_id") REFERENCES "hotels"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "tasks" ADD CONSTRAINT "FK_eb930b6722db7f92048331f42ed" FOREIGN KEY ("room_id") REFERENCES "rooms"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "tasks" ADD CONSTRAINT "FK_27821ee30aa99daef697f21322c" FOREIGN KEY ("assigned_to_user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE NO ACTION`);
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE "tasks" DROP CONSTRAINT "FK_27821ee30aa99daef697f21322c"`);
+        await queryRunner.query(`ALTER TABLE "tasks" DROP CONSTRAINT "FK_eb930b6722db7f92048331f42ed"`);
+        await queryRunner.query(`ALTER TABLE "tasks" DROP CONSTRAINT "FK_570bdf2bb66fc333f0457a325c3"`);
+        await queryRunner.query(`ALTER TABLE "folio_items" DROP CONSTRAINT "FK_0d001c7844fe97e2dc5e2f3b264"`);
+        await queryRunner.query(`ALTER TABLE "folio_items" DROP CONSTRAINT "FK_ef34cba1ad63d275b23aa3bff0f"`);
+        await queryRunner.query(`ALTER TABLE "folio_items" DROP CONSTRAINT "FK_2eec5ee20e7277ae54568a5c784"`);
+        await queryRunner.query(`ALTER TABLE "folio_items" DROP CONSTRAINT "FK_4e823db6536a555f58180350ef6"`);
+        await queryRunner.query(`ALTER TABLE "services" DROP CONSTRAINT "FK_c466faaf88d8335ed1acffb21eb"`);
+        await queryRunner.query(`ALTER TABLE "folios" DROP CONSTRAINT "FK_a3ee78087a6754cb7d0b22af883"`);
+        await queryRunner.query(`ALTER TABLE "folios" DROP CONSTRAINT "FK_627cf68fb867e55fa7e0f528735"`);
+        await queryRunner.query(`ALTER TABLE "folios" DROP CONSTRAINT "FK_ebb264728f2999a0945cd7891ee"`);
+        await queryRunner.query(`ALTER TABLE "folios" DROP CONSTRAINT "FK_51ceeb922b81e5a269511d50cb3"`);
+        await queryRunner.query(`ALTER TABLE "invoices" DROP CONSTRAINT "FK_9df36d0f0732ba17083a802a94f"`);
+        await queryRunner.query(`ALTER TABLE "invoices" DROP CONSTRAINT "FK_1916919510894fecce51c74ede1"`);
+        await queryRunner.query(`ALTER TABLE "invoices" DROP CONSTRAINT "FK_5ba20b78d8a33cba794810e8f27"`);
+        await queryRunner.query(`ALTER TABLE "invoices" DROP CONSTRAINT "FK_0bdc0816e8df4e69dd3a2994916"`);
+        await queryRunner.query(`ALTER TABLE "reservations" DROP CONSTRAINT "FK_6aef3a04f7c96611e75d2db10fb"`);
+        await queryRunner.query(`ALTER TABLE "reservations" DROP CONSTRAINT "FK_dc005326311e08f043613095b3e"`);
+        await queryRunner.query(`ALTER TABLE "reservations" DROP CONSTRAINT "FK_004cd8da8192b7f0df6b927d9d2"`);
+        await queryRunner.query(`ALTER TABLE "rooms" DROP CONSTRAINT "FK_8a380bdc519b8701daf0ec62da0"`);
+        await queryRunner.query(`ALTER TABLE "rooms" DROP CONSTRAINT "FK_7a61484af364d0d804b21b25c7f"`);
+        await queryRunner.query(`ALTER TABLE "room_types" DROP CONSTRAINT "FK_d5b28cff7295a9de224a3bd9911"`);
+        await queryRunner.query(`ALTER TABLE "guests" DROP CONSTRAINT "FK_7530415f4d7c969101ec8424df2"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP CONSTRAINT "FK_f18afc9d813b651ab321b83dafa"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP CONSTRAINT "FK_a2cecd1a3531c0b041e29ba46e1"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP CONSTRAINT "FK_5d850bfb38a7766b0a39adcd355"`);
+        await queryRunner.query(`DROP TABLE "tasks"`);
+        await queryRunner.query(`DROP TYPE "public"."task_source_enum"`);
+        await queryRunner.query(`DROP TYPE "public"."task_status_enum"`);
+        await queryRunner.query(`DROP TYPE "public"."task_priority_enum"`);
+        await queryRunner.query(`DROP TYPE "public"."task_type_enum"`);
+        await queryRunner.query(`DROP TABLE "folio_items"`);
+        await queryRunner.query(`DROP TABLE "services"`);
+        await queryRunner.query(`DROP TABLE "folios"`);
+        await queryRunner.query(`DROP TYPE "public"."folio_status_enum"`);
+        await queryRunner.query(`DROP TABLE "invoices"`);
+        await queryRunner.query(`DROP TYPE "public"."invoice_status_enum"`);
+        await queryRunner.query(`DROP TABLE "reservations"`);
+        await queryRunner.query(`DROP TYPE "public"."reservation_status_enum"`);
+        await queryRunner.query(`DROP TABLE "rooms"`);
+        await queryRunner.query(`DROP TYPE "public"."maintenance_status_enum"`);
+        await queryRunner.query(`DROP TYPE "public"."cleaning_status_enum"`);
+        await queryRunner.query(`DROP TYPE "public"."occupancy_status_enum"`);
+        await queryRunner.query(`DROP TABLE "room_types"`);
+        await queryRunner.query(`DROP TYPE "public"."room_type_enum"`);
+        await queryRunner.query(`DROP TABLE "guests"`);
+        await queryRunner.query(`DROP TABLE "hotels"`);
+        await queryRunner.query(`DROP TYPE "public"."hotel_status_enum"`);
+        await queryRunner.query(`DROP TABLE "users"`);
+        await queryRunner.query(`DROP TABLE "roles"`);
+    }
+
+}
