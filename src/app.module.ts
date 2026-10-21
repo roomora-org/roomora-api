@@ -15,6 +15,7 @@ import { FoliosModule } from './folios/folios.module.js';
 import { ServicesModule } from './services/services.module.js';
 import { FolioItemsModule } from './folio-items/folio-items.module.js';
 import { InvoicesModule } from './invoices/invoices.module.js';
+import { EmployeesModule } from './employees/employees.module.js';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { InvoicesModule } from './invoices/invoices.module.js';
     ServicesModule,
     FolioItemsModule,
     InvoicesModule,
+    EmployeesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

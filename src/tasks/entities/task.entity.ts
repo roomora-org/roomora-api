@@ -8,13 +8,13 @@ import {
 import { BaseEntity } from '../../common/base.entity.js';
 import { Hotel } from '../../hotels/entities/hotel.entity.js';
 import { Room } from '../../rooms/entities/room.entity.js';
-import { User } from '../../users/entities/user.entity.js';
 import {
   TaskType,
   TaskPriority,
   TaskStatus,
   TaskSource,
 } from '../enums/task.enum.js';
+import { Employee } from '../../employees/entities/employee.entity.js';
 
 @Entity({ name: 'tasks' })
 export class Task extends BaseEntity {
@@ -38,9 +38,9 @@ export class Task extends BaseEntity {
   @Column({ name: 'assigned_to_user_id', type: 'uuid' })
   assignedToUserId: string;
 
-  @ManyToOne(() => User, { onDelete: 'RESTRICT', nullable: false })
-  @JoinColumn({ name: 'assigned_to_user_id' })
-  assignedToUser: User;
+  @ManyToOne(() => Employee, { onDelete: 'RESTRICT', nullable: false })
+  @JoinColumn({ name: 'assigned_to_employee_id' })
+  assignedToEmployee: Employee;
 
   @Column({
     type: 'enum',

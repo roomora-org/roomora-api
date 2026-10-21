@@ -10,7 +10,7 @@ import { BaseEntity } from '../../common/base.entity.js';
 import { Hotel } from '../../hotels/entities/hotel.entity.js';
 import { Folio } from '../../folios/entities/folio.entity.js';
 import { Service } from '../../services/entities/service.entity.js';
-import { User } from '../../users/entities/user.entity.js';
+import { Employee } from '../../employees/entities/employee.entity.js';
 
 @Entity({ name: 'folio_items' })
 export class FolioItem extends BaseEntity {
@@ -77,12 +77,12 @@ export class FolioItem extends BaseEntity {
   @Column({ name: 'voided_at', type: 'timestamptz', nullable: true })
   voidedAt: Date | null;
 
-  @Column({ name: 'voided_by_user_id', type: 'uuid', nullable: true })
-  voidedByUserId: string | null;
+  @Column({ name: 'voided_by_employee_id', type: 'uuid', nullable: true })
+  voidedByEmployeeId: string | null;
 
-  @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
-  @JoinColumn({ name: 'voided_by_user_id' })
-  voidedByUser: User | null;
+  @ManyToOne(() => Employee, { onDelete: 'SET NULL', nullable: true })
+  @JoinColumn({ name: 'voided_by_employee_id' })
+  voidedByEmployee: Employee | null;
 
   @Column({ name: 'void_reason', type: 'text', nullable: true })
   voidReason: string | null;

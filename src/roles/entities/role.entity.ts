@@ -1,6 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  type Relation,
+} from 'typeorm';
 import { BaseEntity } from '../../common/base.entity.js';
-import { User } from '../../users/entities/user.entity.js';
+import { Employee } from '../../employees/entities/employee.entity.js';
 
 @Entity({ name: 'roles' })
 export class Role extends BaseEntity {
@@ -13,6 +19,6 @@ export class Role extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   description: string | null;
 
-  @OneToMany(() => User, (user) => user.role)
-  users: User[];
+  @OneToMany(() => Employee, (employee) => employee.role)
+  employees: Relation<Employee[]>;
 }
