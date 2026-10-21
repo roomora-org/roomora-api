@@ -10,8 +10,8 @@ import { BaseEntity } from '../../common/base.entity.js';
 import { Hotel } from '../../hotels/entities/hotel.entity.js';
 import { Folio } from '../../folios/entities/folio.entity.js';
 import { Guest } from '../../guests/entities/guest.entity.js';
-import { User } from '../../users/entities/user.entity.js';
 import { InvoiceStatus } from '../enums/invoice-status.enum.js';
+import { Employee } from '../../employees/entities/employee.entity.js';
 
 @Entity({ name: 'invoices' })
 export class Invoice extends BaseEntity {
@@ -28,7 +28,10 @@ export class Invoice extends BaseEntity {
   @Column({ name: 'folio_id', type: 'uuid', unique: true })
   folioId: string;
 
-  @ManyToOne(() => Folio, (folio) => folio.invoice, { onDelete: 'RESTRICT', nullable: false })
+  @ManyToOne(() => Folio, (folio) => folio.invoice, {
+    onDelete: 'RESTRICT',
+    nullable: false,
+  })
   @JoinColumn({ name: 'folio_id' })
   folio: Relation<Folio>;
 
@@ -66,11 +69,11 @@ export class Invoice extends BaseEntity {
   paidAt: Date | null;
 
   @Column({ name: 'paid_by_user_id', type: 'uuid', nullable: true })
-  paidByUserId: string | null;
+  paidByEmployeeId: string | null;
 
-  @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
-  @JoinColumn({ name: 'paid_by_user_id' })
-  paidByUser: User | null;
+  @ManyToOne(() => Employee, { onDelete: 'SET NULL', nullable: true })
+  @JoinColumn({ name: 'paid_by_employee_id' })
+  paidByEmployee: Employee | null;
 
   @Column({ type: 'text', nullable: true })
   notes: string | null;

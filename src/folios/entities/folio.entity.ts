@@ -11,10 +11,10 @@ import {
 import { BaseEntity } from '../../common/base.entity.js';
 import { Hotel } from '../../hotels/entities/hotel.entity.js';
 import { Reservation } from '../../reservations/entities/reservation.entity.js';
-import { User } from '../../users/entities/user.entity.js';
 import { FolioStatus } from '../enums/folio-status.enum.js';
 import { FolioItem } from '../../folio-items/entities/folio-item.entity.js';
 import { Invoice } from '../../invoices/entities/invoice.entity.js';
+import { Employee } from '../../employees/entities/employee.entity.js';
 
 @Entity({ name: 'folios' })
 export class Folio extends BaseEntity {
@@ -54,19 +54,19 @@ export class Folio extends BaseEntity {
   @Column({ name: 'closed_at', type: 'timestamptz', nullable: true })
   closedAt: Date | null;
 
-  @Column({ name: 'created_by_user_id', type: 'uuid' })
-  createdByUserId: string;
+  @Column({ name: 'created_by_employee_id', type: 'uuid' })
+  createdByEmployeeId: string;
 
-  @ManyToOne(() => User, { onDelete: 'RESTRICT', nullable: false })
-  @JoinColumn({ name: 'created_by_user_id' })
-  createdByUser: User;
+  @ManyToOne(() => Employee, { onDelete: 'RESTRICT', nullable: false })
+  @JoinColumn({ name: 'created_by_employee_id' })
+  createdByEmployee: Employee;
 
-  @Column({ name: 'closed_by_user_id', type: 'uuid', nullable: true })
-  closedByUserId: string | null;
+  @Column({ name: 'closed_by_employee_id', type: 'uuid', nullable: true })
+  closedByEmployeeId: string | null;
 
-  @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
-  @JoinColumn({ name: 'closed_by_user_id' })
-  closedByUser: User | null;
+  @ManyToOne(() => Employee, { onDelete: 'SET NULL', nullable: true })
+  @JoinColumn({ name: 'closed_by_employee_id' })
+  closedByEmployee: Employee | null;
 
   @Column({ type: 'text', nullable: true })
   notes: string | null;

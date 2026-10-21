@@ -8,7 +8,7 @@ import {
 
 import { HotelStatus } from '../enums/hotel-status.enum.js';
 import { BaseEntity } from '../../common/base.entity.js';
-import { User } from '../../users/entities/user.entity.js';
+import { Employee } from '../../employees/entities/employee.entity.js';
 
 @Entity({ name: 'hotels' })
 export class Hotel extends BaseEntity {
@@ -73,6 +73,6 @@ export class Hotel extends BaseEntity {
   })
   status: HotelStatus;
 
-  @OneToMany(() => User, (user) => user.hotel)
-  employees: Relation<User[]>;
+  @OneToMany(() => Employee, (employee) => employee.hotel)
+  employees: Relation<Employee[]>;
 }
