@@ -49,4 +49,7 @@ export class Guest extends BaseEntity {
 
   @Column({ name: 'passport_number', type: 'varchar', nullable: true, unique: true})
   passportNumber: string | null;
+
+  @Column({ name: 'document_type', type: 'varchar', nullable: true })
+documentType: string | null;
 }
