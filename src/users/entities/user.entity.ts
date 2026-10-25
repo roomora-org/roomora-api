@@ -38,6 +38,13 @@ export class User extends BaseEntity {
   })
   accountType: AccountType;
 
+  @Column({
+    name: 'email_verified_at',
+    type: 'timestamptz',
+    nullable: true,
+  })
+  emailVerifiedAt: Date | null;
+
   @Column({ name: 'last_login_at', type: 'timestamptz', nullable: true })
   lastLoginAt: Date | null;
 
