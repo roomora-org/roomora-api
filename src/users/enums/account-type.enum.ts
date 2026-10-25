@@ -1,0 +1,4 @@
+export enum AccountType {
+  PLATFORM_ADMIN = 'PLATFORM_ADMIN',
+  HOTEL_EMPLOYEE = 'HOTEL_EMPLOYEE',
+}
