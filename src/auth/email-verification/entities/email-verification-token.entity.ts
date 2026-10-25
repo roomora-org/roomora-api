@@ -10,7 +10,7 @@ import {
     type Relation,
 } from 'typeorm';
 
-import { User } from '../../users/entities/user.entity.js';
+import { User } from '../../../users/entities/user.entity.js';
 
 @Entity({ name: 'email_verification_tokens' })
 @Index(
