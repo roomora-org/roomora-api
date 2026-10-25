@@ -1,0 +1,179 @@
+{
+  "info": {
+    "_postman_id": "f2ebcf05-270b-417a-a966-0a9f498f77d2",
+    "name": "Roomora",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "48253673",
+    "_collection_link": "https://go.postman.co/collection/48253673-f2ebcf05-270b-417a-a966-0a9f498f77d2?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"noorsakhel04@gmail.com\",\r\n    \"password\": \"noor1234\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"firstName\": \"Noor\",\r\n  \"lastName\": \"Sakhel\",\r\n  \"email\": \"noorsakhel04@gmail.com\",\r\n  \"password\": \"noor1234\",\r\n  \"phone\": \"0595686355\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Email",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"token\": \"f9db425efdc63057d41e6b6cdca4ab1e75783df8f54dc1b696700da0f49d8800\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/auth/verify-email",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "auth",
+                "verify-email"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"refreshToken\": \"84e2726928c0d6dae0893c72e0a3aed484d49921f98022d5e70a9a0297e3d0b9d59885baf4ddfdf5\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/auth/refresh",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "auth",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4YjAxN2MwNC1jMThiLTQ2NGYtOWNlNC1mNmVmN2EyZTVjYzkiLCJlbWFpbCI6Im5vb3JzYWtoZWwwNEBnbWFpbC5jb20iLCJhY2NvdW50VHlwZSI6IkhPVEVMX0VNUExPWUVFIiwiaWF0IjoxNzkyOTQ0MTgwLCJleHAiOjE3OTI5NDUwODB9.A9oRWjxkl7Nadcq8pxdmDw_2kgsbpZmLPmnIJbXv6XE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:3000/auth/logout",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "# Roomora – Authentication API\n\nThis document explains the five authentication endpoints and how to test them using Postman.\n\n## 1\\. Register\n\n**Endpoint:** `POST /auth/register`\n\n**Purpose:** Create a new user account and send an email verification link.\n\n**Request Body:**\n\n```\n{\n  \"firstName\": \"Noor\",\n  \"lastName\": \"Ahmad\",\n  \"email\": \"noor@example.com\",\n  \"password\": \"StrongPassword123\",\n  \"phone\": \"0595686355\"\n}\n\n ```\n\n**Expected Response:**\n\n```\n{\n  \"message\": \"Registration successful. Please verify your email.\"\n}\n\n ```\n\n**How it works:**\n\n1. The user submits their registration information.\n    \n2. The backend validates the data and creates the account.\n    \n3. An email verification link is sent to the user's email address.\n    \n\nStartFragment\n\n## 2\\. Verify Email\n\n**Endpoint:** `POST /auth/verify-email`\n\n**Purpose:** Verify the user's email address and, if implemented, authenticate the user after successful verification.\n\n**Request Body:**\n\n```\n{\n  \"token\": \"EMAIL_VERIFICATION_TOKEN\"\n}\n\n ```\n\n**Expected Response (if email verification returns** **`AuthResponseDto`****):**\n\n```\n{\n  \"accessToken\": \"JWT_ACCESS_TOKEN\",\n  \"refreshToken\": \"REFRESH_TOKEN\",\n  \"tokenType\": \"Bearer\",\n  \"expiresIn\": 900,\n  \"user\": {\n    \"id\": \"USER_UUID\",\n    \"firstName\": \"Noor\",\n    \"lastName\": \"Ahmad\",\n    \"email\": \"noor@example.com\"\n  }\n}\n\n ```\n\n**How it works:**\n\n1. The user receives an email containing a verification token.\n    \n2. The client sends the token to the backend.\n    \n3. The backend validates the token and verifies the user's email.\n    \n4. If the endpoint also authenticates the user, it returns the authentication tokens and user information.\n    \n\nNote: The `user` fields depend on the actual `UserResponseDto`. The response above is illustrative.\n\n## 3\\. Login\n\n**Endpoint:** `POST /auth/login`\n\n**Purpose:** Authenticate the user and return authentication tokens and user information.\n\n**Request Body:**\n\n```\n{\n  \"email\": \"noor@example.com\",\n  \"password\": \"StrongPassword123\"\n}\n\n ```\n\n**Expected Response:**\n\n```\n{\n  \"accessToken\": \"JWT_ACCESS_TOKEN\",\n  \"refreshToken\": \"REFRESH_TOKEN\",\n  \"tokenType\": \"Bearer\",\n  \"expiresIn\": 900,\n  \"user\": {\n    \"id\": \"USER_UUID\",\n    \"firstName\": \"Noor\",\n    \"lastName\": \"Ahmad\",\n    \"email\": \"noor@example.com\"\n  }\n}\n\n ```\n\n**Response Fields:**\n\n- `accessToken`: JWT used to access protected endpoints.\n    \n- `refreshToken`: Used to obtain a new access token.\n    \n- `tokenType`: The token type, which is `Bearer`.\n    \n- `expiresIn`: Access token lifetime in seconds. For a 15-minute token, the value is `900`.\n    \n- `user`: The authenticated user's information, formatted using `UserResponseDto`.\n    \n\n**How it works:**\n\n1. The user submits their email and password.\n    \n2. The backend validates the credentials and checks whether the user can log in.\n    \n3. If successful, the backend returns the authentication tokens and user information.\n    \n\n## 4\\. Refresh Token\n\n**Endpoint:** `POST /auth/refresh`\n\n**Purpose:** Obtain a new access token without logging in again.\n\n**Request Body:**\n\n```\n{\n  \"refreshToken\": \"REFRESH_TOKEN\"\n}\n\n ```\n\n**Expected Response:**\n\n```\n{\n  \"accessToken\": \"NEW_JWT_ACCESS_TOKEN\",\n  \"refreshToken\": \"REFRESH_TOKEN\"\n}\n\n ```\n\n**How it works:**\n\n1. The client submits the refresh token.\n    \n2. The backend validates the token and checks its expiration and associated user.\n    \n3. If valid, the backend issues a new access token.\n    \n\nThe same refresh token is reused until it expires or is revoked, according to the current authentication design.\n\n## 5\\. Logout\n\n**Endpoint:** `POST /auth/logout`\n\n**Purpose:** Log out the current user and revoke their refresh token.\n\n**Request Headers:**\n\n```\nAuthorization: Bearer YOUR_ACCESS_TOKEN\n\n ```\n\n**Request Body:** None.\n\n**Expected Response:**\n\n```\n{\n  \"message\": \"Logged out successfully.\"\n}\n\n ```\n\n**How it works:**\n\n1. The client sends a valid access token in the `Authorization` header.\n    \n2. The `JwtAuthGuard` authenticates the request.\n    \n3. The backend identifies the current user and deletes their stored refresh token.\n    \n\n**Note:** Logging out deletes the refresh token but does not automatically invalidate an already-issued access token. The access token may remain usable until it expires.\n\n---\n\n## Authentication Flow\n\n1. Register a new account.\n    \n2. Verify the email address.\n    \n3. Log in to receive the access and refresh tokens.\n    \n4. Include the access token when calling protected endpoints.\n    \n5. Use the refresh endpoint when the access token expires.\n    \n6. Log out when finished.\n    \n\n## Testing with Postman\n\n- Use `POST` for all five endpoints.\n    \n- Select **Body → raw → JSON** for endpoints that require a request body.\n    \n- For protected endpoints such as logout, use **Authorization → Bearer Token** and provide the access token.\n    \n- Replace example values and placeholder tokens with valid test data.\n    \n\n**Note:** The request and response examples are illustrative. Confirm the exact field names and response structures against the current DTOs, controllers, and services.\n\nEndFragment"
+    }
+  ]
+}
