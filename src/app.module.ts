@@ -17,6 +17,8 @@ import { FolioItemsModule } from './folio-items/folio-items.module.js';
 import { InvoicesModule } from './invoices/invoices.module.js';
 import { EmployeesModule } from './employees/employees.module.js';
 import { AuthModule } from './auth/auth.module.js';
+import { OnboardingModule } from './onboarding/onboarding.module.js';
+import { HealthModule } from './health/health.module.js';
 import config from "./config/config.js";
 
 @Module({
@@ -53,6 +55,8 @@ import config from "./config/config.js";
     InvoicesModule,
     EmployeesModule,
     AuthModule,
+    OnboardingModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

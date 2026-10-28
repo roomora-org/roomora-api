@@ -14,8 +14,10 @@ import { RegisterDto } from './dto/register.dto.js';
 import type { Request } from 'express';
 import { JwtAuthGuard } from './strategies/guards/jwt-auth.guard.js';
 import { VerifyEmailDto } from './email-verification/dto/verify-email.dto.js';
+import { ResendVerificationDto } from './email-verification/dto/resend-verification.dto.js';
 import { RefreshRequestDto } from './refresh-token/dto/refresh-request.dto.js';
-import { User } from '../users/entities/user.entity.js';
+import { ForgotPasswordDto } from './password-reset/dto/forgot-password.dto.js';
+import { ResetPasswordDto } from './password-reset/dto/reset-password.dto.js';
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -40,6 +42,12 @@ export class AuthController {
     return this.authService.verifyEmail(dto.token);
   }
 
+  @Post('resend-verification')
+  @HttpCode(HttpStatus.OK)
+  resendVerification(@Body() dto: ResendVerificationDto) {
+    return this.authService.resendVerificationEmail(dto);
+  }
+
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginDto) {
@@ -50,6 +58,18 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async refresh(@Body() refreshRequestDto: RefreshRequestDto) {
     return this.authService.refreshAccessToken(refreshRequestDto);
+  }
+
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  async forgotPassword(@Body() dto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(dto);
+  }
+
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  async resetPassword(@Body() dto: ResetPasswordDto) {
+    return this.authService.resetPassword(dto);
   }
 
   @Get('me')
