@@ -16,8 +16,17 @@ export default () => ({
     smtpPort: Number(process.env.SMTP_PORT ?? 587),
     smtpUser: process.env.SMTP_USER,
     smtpPassword: process.env.SMTP_PASSWORD,
-    smtpSecure: process.env.SMTP_SECURE === 'true',
+    smtpSecure:
+      String(process.env.SMTP_SECURE ?? 'false')
+        .toLowerCase()
+        .trim() === 'true',
     from: process.env.EMAIL_FROM,
     frontendUrl: process.env.FRONTEND_URL,
+    verificationExpiryMinutes: Number(
+      process.env.EMAIL_VERIFICATION_EXPIRY_MINUTES ?? 30,
+    ),
+    resendCooldownSeconds: Number(
+      process.env.EMAIL_RESEND_COOLDOWN_SECONDS ?? 60,
+    ),
   },
 });

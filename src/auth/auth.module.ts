@@ -8,11 +8,14 @@ import { User } from '../users/entities/user.entity.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TokenService } from './token.service.js';
 import { Employee } from '../employees/entities/employee.entity.js';
+import { Role } from '../roles/entities/role.entity.js';
 import { EmailVerificationToken } from './email-verification/entities/email-verification-token.entity.js';
 import { EmailVerificationService } from './email-verification/services/email-verification.service.js';
 import { RefreshToken } from './refresh-token/entities/refresh-token.entity.js';
 import { RefreshTokenService } from './refresh-token/services/refresh-token.service.js';
 import { JwtStrategy } from './strategies/jwt.strategy.js';
+import { PasswordResetToken } from './password-reset/entities/password-reset-token.entity.js';
+import { PasswordResetService } from './password-reset/services/password-reset.service.js';
 
 @Module({
   imports: [
@@ -20,8 +23,10 @@ import { JwtStrategy } from './strategies/jwt.strategy.js';
     TypeOrmModule.forFeature([
       User,
       Employee,
+      Role, // ← جديد: نحتاجه لإنشاء Employee بدور Hotel Manager
       EmailVerificationToken,
       RefreshToken,
+      PasswordResetToken,
     ]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -29,7 +34,9 @@ import { JwtStrategy } from './strategies/jwt.strategy.js';
       useFactory: (configService: ConfigService) => ({
         secret: configService.getOrThrow<string>('jwt.secret'),
         signOptions: {
-          expiresIn: configService.getOrThrow<string>('jwt.expiresIn') as '15m' | '1d',
+          expiresIn: configService.getOrThrow<string>('jwt.expiresIn') as
+            | '15m'
+            | '1d',
         },
       }),
     }),
@@ -40,8 +47,9 @@ import { JwtStrategy } from './strategies/jwt.strategy.js';
     TokenService,
     EmailVerificationService,
     RefreshTokenService,
-    JwtStrategy
+    PasswordResetService,
+    JwtStrategy,
   ],
-  exports: [AuthService, TokenService],
+  exports: [AuthService, TokenService, RefreshTokenService],
 })
 export class AuthModule {}
